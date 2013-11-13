@@ -30,9 +30,9 @@
 ;;; 少なくとも純粋verよりは倍くらい速い
 (defun srch (p)
   (let ((result 0))
-	(do ((a 1 (1+ a))) ((>= a (/ p 2)) result)
-	  (do ((b 1 (1+ b))) ((>= b a) nil)
-		(do ((c 1 (1+ c))) ((>= c b) nil)
+	(for (a 1) (< a (/ p 2)) (1+ a) result
+	  (for (b 1) (< b a) (1+ b) nil 
+		(for (c 1) (< c b) (1+ c) nil 
 		  (when (and (= p (+ a b c)) (= (* a a) (+ (* b b) (* c c))))
 			(incf result)))))))
 
