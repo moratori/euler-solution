@@ -30,14 +30,14 @@
 
 
 
-(let ((result 1) (len 0))
-	  (for (a -999) (< a 1000) (1+ a) result
-		(for (b 2) (< b 1000) (1+ b) nil
-			 (let1 plen (leneq (make a b))
-				 (when (> plen len)
-			  		 (setf result (* a b) 
-						   len plen)))))
-	  (print result))
+(multiple-value-bind 
+  (a b) 
+  (max/minimize 
+	'max (lambda (x y) 
+		   (leneq (make x y))) 
+	((-999 999) (2 999)))
+  (declare (ignore b))
+  (print (apply #'* a)))
 
 
 
