@@ -37,7 +37,7 @@
 		   (leneq (make x y))) 
 	((-999 999) (2 999)))
   (declare (ignore b))
-  (print (apply #'* a)))
+  (print (prod a)))
 
 
 
