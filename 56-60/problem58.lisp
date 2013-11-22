@@ -43,6 +43,9 @@
 ;;; 26239 is NOT True
 
 
+;;; まず高速なprime??でだいたい探索して
+;;; prime?で正確に出す
+
 ;(format t "THE ANSWER = ~A~%" (main 5787)) ;; -> 26247
 (print (main 26001))
 
