@@ -76,9 +76,6 @@
   (let1 num (getdigit n)
 		(equal num (remove-duplicates num))))
 
-(defun ndup? (l)
-  (equal l (remove-duplicates l)))
-
 ;;; f(a) + f(b) = 5
 ;;; 5 > f(a) > 0
 ;;; 5 > f(b) > 0
@@ -86,19 +83,19 @@
 ;;; a が1 桁の時 bは4桁の数
 (print 
 	  (sum 
-		(remove-if-not (lambda (each)
-		  (let1 sp (getdigit each)
-			(label (main (acc)
-				  	(if (> acc each) nil
-					 	(if (not (div? each acc)) (main (1+ acc))
-							(let* ((pair (/ each acc))
-						   		   (l (append sp (getdigit acc) (getdigit pair))))
-						 		(if  (and (= (length l) 9) (ndup? l) (set-equal? l '(1 2 3 4 5 6 7 8 9)))
-						   			t
-						   			(main (1+ acc)))))))
-			(main 1))))
-		
-		[x | x <- (range1-n 9999 1000) (diff? x)])))
+		(remove-if-not 
+		  (lambda (each)
+		  	(label (main (acc)
+				(cond 
+					((> acc each) nil)
+					((not (div? each acc)) (main (1+ acc)))
+					((pandigital? (digit->num 
+										 (append (getdigit each) 
+												 (getdigit acc) 
+												 (getdigit (/ each acc))))) t)
+					(t (main (1+ acc)))))
+				(main 1)))
+		   [x | x <- (range1-n 9999 1000) (diff? x)])))
 
 
 
