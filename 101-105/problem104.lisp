@@ -2,23 +2,20 @@
 
 (use :euler.util.my)
 
-
-;;; fib(x) > 10^9 -> x > 38
-;;; 39 から見てく
-
 (defun such? (n)
-  (let1 split (getdigit n)
+ 
 	(and 
-	  (pandigital? (digit->num (take 9 split)))
-	  (pandigital? (digit->num (take 9 (reverse split))))
-	  )))
+	  (pandigital? (bottom-digit n 9))
+	  (pandigital? (top-digit n 9))
+	  ))
 
 
+(block exit
+	(for (x 40) (< x INF+) (1+ x) nil
+		 (when (such? (fibmat x))
+		   (print x)
+		   (return-from exit nil))))
 
-(print 
-  
-(find-fn (lambda (x) (such? (fibiter x))) 1)
-  )
 
 
 
