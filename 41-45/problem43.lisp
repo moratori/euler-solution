@@ -33,6 +33,49 @@
 				(equal (cdr (getdigit x)) (cdr (getdigit y)))) 
 			l2)) l1))
 
+(defun check (a b c d e f g)
+  (let ((sa (getdigit a))
+		)
+	t)
+  )
 
-(print (sat-num 2))
-(print (sat-num 3))
+
+(setq 
+  c3 
+  (intersection 
+	(useble (sat-num 3) (sat-num 2)) 
+	(useble (sat-num 3) (sat-num 5)))
+  c2
+  (useble (sat-num 2) c3)
+  c5
+  (intersection 
+	(useble (sat-num 5) c3)
+	(useble (sat-num 5) (sat-num 7)))
+  c7
+  (intersection
+	(useble (sat-num 7) c5)
+	(useble (sat-num 7) (sat-num 11)))
+  c11
+  (intersection
+	(useble (sat-num 11) c7)
+	(useble (sat-num 11) (sat-num 13)))
+  c13
+  (intersection
+	(useble (sat-num 13) c11)
+	(useble (sat-num 13) (sat-num 17)))
+  c17
+  	(useble (sat-num 17) c13))
+
+#|
+[(list a b c d e f g) 
+ 	| a <- (sat-num 2)
+	  b <- (sat-num 3)
+	  c <- (sat-num 5)
+	  d <- (sat-num 7)
+	  e <- (sat-num 11)
+	  f <- (sat-num 13)
+	  g <- (sat-num 17) (check a b c d e f g)]
+|#
+
+
+(print c5)

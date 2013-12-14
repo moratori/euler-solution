@@ -1,5 +1,13 @@
 
-(use :euler.util.my)
+(ql:quickload :euler.util.my)
+
+(import '(euler.util.my:psort
+		  euler.util.my:range1-n
+		  euler.util.my:group
+		  euler.util.my:zip
+		  euler.util.my:take))
+
+(use :iterate)
 
 (defun split-string (str ch &optional (f (lambda (x)x)))
   (labels
@@ -20,48 +28,47 @@
 	(reverse (main str "" nil))))
 
 
-
 (defvar *data* 
   (with-open-file (in "./cipher1.txt" :direction :input)
 	(split-string (read-line in) #\, #'parse-integer)))
 
+(defvar *key-value* (range1-n 122 97))
 
-(print 
-  (psort
-	   (remove-duplicates(mapcar 
-		 (lambda (x)
-		   (list x (count x *data*))) *data*) :test #'equal)
-	   (lambda (x y)
-		 (> (second x) (second y)))))
+(defun xor (code k)
+  (boole boole-xor code k))
 
-
-;(print 
- ; (find-fn 
-;	(lambda (x) (= 101 (boole boole-xor 79 x))) 43))
-
-;; e/E
-;; 101 -> 79
-;; 69  -> 79
-#|
-(print (mapcar 
-		 (lambda (x)
-		   (code-char (boole boole-xor x 10))) *data*))
- E?       T?       A?
-(79 86) (68 77) (71 70)
-
-XOR()
-
-|#
-
-(defun concat (cl)
-  (reduce (lambda (x y) (concatenate 'String x (string y))) cl :initial-value ""))
+(defun decrypt (data k)
+  (mapcan 
+	(lambda (each3)
+	  (mapcar 
+		(lambda (x) (apply #'xor x)) (zip each3 k)))
+  	;; padding 
+	(group (append data '(0 0)) 3)))
 
 
+(defun max-code (data)
+  (iter (for each in data)
+		(finding each maximizing (count-if (lambda (x) (= x each)) data))))
 
-(defun f (a x y z)
-  (boole boole-xor (boole boole-xor (boole boole-xor a x) y) z))
+(defun decode (data)
+  (reduce 
+	(lambda (x y)
+	  (concatenate 'string x y)) (mapcar 
+	(lambda (x) 
+	  (string (code-char x))) data)))
 
 
+(destructuring-bind (a b c) (apply #'zip (group (append *data* '(0 0)) 3))
+  (let ((am (max-code a))
+		(bm (max-code b))
+		(cm (max-code c)))
+	(dolist (k [(list x y z) | x <- *key-value* y <- *key-value* z <- *key-value*])
+	  (destructuring-bind (x y z) k
+		(when (= (xor am x) (xor bm y) (xor cm z))
+		  (format t "Key = ~A~%~A~%" k (decode (decrypt *data* k))))))))
 
-(mapc (lambda (x) (format t "~A~%~%" x))  [(concat (mapcar (lambda (x) (code-char (boole boole-xor x key)))  *data*))| key <- (range1-n 366 291)])
+;;; (103 111 100)
+
+(print (apply #'+ (take 1201 (decrypt *data* '(103 111 100)))))
+
 
