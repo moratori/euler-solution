@@ -20,8 +20,9 @@
   (time (loop 
 			named exit
 			for x 
-			from (floor (sqrt 1020304050607080900)) 
+			from (+ 8 (floor (sqrt 1020304050607080900)))
 			upto (floor (sqrt 1929394959697989990))
+			by 10
 			do (when (check? (* x x))
 				 (return-from exit x)))))
 
