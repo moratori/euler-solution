@@ -21,7 +21,7 @@
 			)
 			)
 		)
-	(main n 1 nil))
+	(main n 10 nil))
   )
 
 
@@ -30,5 +30,5 @@
 ;; 26.128
 ;;(print (time (findn 12)))
 ;; 25.829
-(print (time (findn 30)))
+(print (time (findn 12)))
 

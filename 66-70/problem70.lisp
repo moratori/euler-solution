@@ -12,12 +12,10 @@
 (use :iterate)
 
 
-(setf 
-  (symbol-function 'euler-phi)
-  (memoize #'euler-phi))
 
 (erat 10000000)
 
+;; こいつがダメだった
 (defun such? (n)
   (let1 ep (euler-phi n)
 	(and 
@@ -25,13 +23,23 @@
 	 (= (digit n) (digit ep)))))
 
 
+(defun such?% (n phi)
+  (let ((nsp (getdigit n))
+		(psp (getdigit phi)))
+	(every 
+	  (lambda (x)
+		(= (count x nsp :test #'=)
+		   (count x psp :test #'=)))
+	  (remove-duplicates nsp :test #'=))))
+
+
+;; 9999889 になるんだけど　まちがいっぽい
+;; でけた
+
 (print 
-  (iter (for each in 
-		   (iter (for x from 2 to 9999999) 
-				 (when (such? x) (collect x))))
-	  (finding each minimizing (/ each (euler-phi each)))))
-
-
-
+  (time (iter (for n from 2 to 9999999)
+			  (let1 phi (euler-phi n)
+				(when (such?% n phi)
+		  			(finding n minimizing (/ n phi)))))))
 
 
