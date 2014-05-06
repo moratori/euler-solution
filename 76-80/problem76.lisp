@@ -1,33 +1,18 @@
 
 
-(use :euler.util.my)
+(defun express (n use)
+	(cond 
+		((or (< n 0) (< use 1))
+		 0)
+		((zerop n) 1)
+		((= use 1) 1)
+		(t (+ (express (- n use) use)
+					(express n (1- use))))))
+
+(defun ways (n)
+	(loop for x from 1 below n
+				sum (express x (- n x))))
 
 
-(defun count-ways% (n start &optional (result 0))
-  (cond 
-	((> 2 n) result)
-	((> n start)
-	 (count-ways% 
-	   (- n start)  
-	   start 
-	   (1+ result)))
-	((> start (- n start)) result)
-	(t 
-	  (count-ways% 
-		(- n start)  
-		start 
-		(1+ result)))))
-
-
-(defun count-ways (n)
-  (loop for i from 1 upto
-		(floor (/ n 2)) sum 
-		(progn 
-		  (let1 c (count-ways% n i)
-			(format t "Start: ~A , Count ~A~%"i c)	
-			c
-			)
-		  )))
-
-
-(print (count-ways 6)) ;; -> 8
+(print 
+	(time (ways 100)))
